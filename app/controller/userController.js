@@ -79,60 +79,12 @@ const userController = {
 
         }
 
-        // // On crée le refresh token et on le stocke en BDD 
-        // const refreshToken = crypto.randomBytes(128).toString('base64');
-
-
-        // // Mettre le token dans la table user
-
-
-
-
-        // let insertToken = await dataMapper.updateById("\"user\"", "token = $1", refreshToken, user.id);
-
-        // response.json(insertToken);
-
-        // await RefreshToken.create({
-        //     userId: user.id,
-        //     token: refreshToken,
-        //     expiresAt: Date.now() + config.refreshToken.expiresIn
-        // });
-
-
-        // j'omet le password
-        // user = ({
-        //     id,
-        //     firstname,
-        //     lastname,
-        //     email,
-        //     birthdate,
-        //     avatar,
-        //     color
-        // }) => ({
-        //     id,
-        //     firstname,
-        //     lastname,
-        //     email,
-        //     birthdate,
-        //     avatar,
-        //     color
-        // });
-
         // console.log(user);
         return response.json({
             user,
             token
         });
     },
-
-    // logOut(request, response) {
-
-    //     if (request.session.user) {
-    //         delete
-    //             delete request.session.user;
-    //     }
-    // },
-    // Ajoute un utilisateur en bdd
 
 
     async addUser(request, response) {
@@ -198,15 +150,22 @@ const userController = {
         console.log("TOKEN : ", token);
 
         let inviteToPlanner = await dataMapper.getOneByCondition("invite", "user_email", email);
+
+        let addPlannerAccess;
         
         if (inviteToPlanner){
-            let addPlannerAccess = await dataMapper.insertOne({user_id : user.id,
+            addPlannerAccess = await dataMapper.insertOne({user_id : user.id,
             planner_id : inviteToPlanner.planner_id}, "user_has_planner");
+            return response.json({
+                user,
+                token,
+                addPlannerAccess
+            });
         }
 
-        response.json({
+        return response.json({
             user,
-            token
+            token,
         });
 
     },
