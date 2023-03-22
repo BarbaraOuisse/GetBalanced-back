@@ -3,7 +3,7 @@
 
 BEGIN;
 
-DROP TABLE
+DROP TABLE IF EXISTS
     "user",
     planner,
     category,
